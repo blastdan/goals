@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>762ad355-4d72-418f-8a69-34b29931b16e</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
+    <PackageReference Include="Mediatr" Version="12.0.0" />
+    <PackageReference Include="Spectre.Console" Version="0.46.0" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.46.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Blastdan.Goals.Domain\Blastdan.Goals.Domain.csproj" />
+    <ProjectReference Include="..\Blastdan.BambooHr.Infrastructure\Blastdan.BambooHr.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+      <None Update="BambooHrSettings.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+  </ItemGroup>
+
+</Project>
