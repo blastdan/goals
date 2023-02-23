@@ -23,15 +23,29 @@ namespace Blastdan.Goals.Cli.Views
                                 .FullSize()
                                 .AddItem("Complete", model.PercentageComplete * 100, Color.Green)
                                 .AddItem("Remaining", (1 - model.PercentageComplete) * 100, Color.Grey);
+            var progressPanel = new Panel(progress)
+                                .Expand()
+                                .Header("Progress");
 
             var goalDescription = new Panel(model.Description);
             goalDescription.Header = new PanelHeader(model.Title);
+            goalDescription.Expand();
 
-            // Create the layout
-            var layout = new Layout(model.Title)
-                        .SplitRows(
+            var calendar = new Calendar(model.DueDate.Year, model.DueDate.Month);
+            calendar.AddCalendarEvent("Due Date", model.DueDate.Year, model.DueDate.Month, model.DueDate.Day);
+            calendar.HighlightStyle(Style.Parse("yellow bold"));
+
+            var calendarPanel = new Panel(calendar)
+                                .Expand()
+                                .Header("Due Date");
+
+            var layout = new Layout("Root")
+                        .SplitColumns(
                             new Layout("Goal", goalDescription),
-                            new Layout("Progress", progress));
+                            new Layout("Description")
+                                .SplitRows(
+                                    new Layout("Progress", progressPanel),
+                                    new Layout("Due Date", calendarPanel)));
 
             return layout;
         }
