@@ -18,6 +18,6 @@ namespace Blastdan.BambooHr.Infrastructure.Models
             this.CurrentUserEmployeeId = employee.EmployeeId;
         }
 
-        public int CurrentUserEmployeeId { get; set; }
+        public long CurrentUserEmployeeId { get; set; }
     }
 }

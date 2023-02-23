@@ -1,3 +1,5 @@
+using Blastdan.BambooHr.Infrastructure;
+using Blastdan.BambooHr.Infrastructure.Handlers;
 using Blastdan.BambooHr.Infrastructure.Respositories;
 using Blastdan.Goals.Domain.Models;
 using Blastdan.Goals.Domain.Repositories;
@@ -17,7 +19,9 @@ namespace Blastdan.Goals.Cli.Bootstrap
             */
             services.AddMediatR(config =>
             {
-                config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(BambooHrConfigurations).Assembly, typeof(Employee).Assembly);
+                config.RegisterServicesFromAssemblies(typeof(Program).Assembly,
+                                                      typeof(SetCurrentUserCommandHandler).Assembly,
+                                                      typeof(Employee).Assembly);
             });
             services.AddSingleton<IAnsiConsole>((provider) => AnsiConsole.Console);
 
@@ -32,6 +36,8 @@ namespace Blastdan.Goals.Cli.Bootstrap
 
             services.AddTransient<IEmployeeRepository, EmployeeRepository>();
             services.AddTransient<IFileCacheRepository, FileCacheRepository>();
+            services.AddTransient<IGoalRepository, GoalRepository>();
+            services.AddSingleton<IFileWriter, SynchronizedCache>();
         }
     }
 }

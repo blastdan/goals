@@ -21,48 +21,25 @@ namespace Blastdan.BambooHr.Infrastructure.Respositories
             var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             dotInfo = new DirectoryInfo(Path.Combine(userProfile, dotFolder));
             goalsCacheInfo = new FileInfo(Path.Combine(dotInfo.FullName, goalsCacheFileName));
-            CreateIfNotExists(dotInfo);
-            CreateIfNotExists(goalsCacheInfo, writer);
         }
 
-        public async Task<GoalsCache> Read()
+        public GoalsCache Read()
         {
-            var json = await writer.ReadFile(goalsCacheInfo.FullName);
+            var json = writer.Read(goalsCacheInfo.FullName);
+
+            if (json == string.Empty)
+            {
+                return new GoalsCache();
+            }
+
             var cache = JsonSerializer.Deserialize<GoalsCache>(json) ?? new GoalsCache();
             return cache;
         }
 
-        public async Task Write(GoalsCache contents)
+        public void Write(GoalsCache contents)
         {
             var json = JsonSerializer.Serialize(contents);
-            await writer.UpdateFileAsync(json, goalsCacheInfo.FullName);
-        }
-
-        /// <summary>
-        /// Creates the .director if it doesn't already exist
-        /// </summary>
-        /// <param name="directory"></param>
-        private static void CreateIfNotExists(DirectoryInfo directory)
-        {
-            if (!Directory.Exists(directory.FullName))
-            {
-                Directory.CreateDirectory(directory.FullName);
-            }
-        }
-
-        /// <summary>
-        /// Writes a default cache contents into the file with the given file writer
-        /// </summary>
-        /// <param name="writer">A thead safe file writer is expected</param>
-        /// <param name="file">Any file path</param>
-        private static void CreateIfNotExists(FileInfo file, IFileWriter writer)
-        {
-            if (!File.Exists(file.FullName))
-            {
-                var cache = new GoalsCache();
-                var contents = JsonSerializer.Serialize(cache);
-                writer.WriteFile(contents, file.FullName);
-            }
+            writer.AddOrUpdate(goalsCacheInfo.FullName, json);
         }
     }
 }

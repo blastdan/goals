@@ -14,14 +14,14 @@ namespace Blastdan.Goals.Domain.Models
             this.LastName = "Not Defined";
         }
 
-        public Employee(int employeeId, string firstName, string lastName)
+        public Employee(long employeeId, string firstName, string lastName)
         {
             this.EmployeeId = employeeId;
             this.FirstName = firstName;
             this.LastName = lastName;
 
         }
-        public int EmployeeId { get; private set; }
+        public long EmployeeId { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
 

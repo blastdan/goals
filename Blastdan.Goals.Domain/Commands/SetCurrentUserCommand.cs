@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Blastdan.Goals.Domain.Commands
 {
-    public class SetCurrentUserCommand : IRequest
+    public class SetCurrentUserCommand : IRequest<long>
     {
 
     }

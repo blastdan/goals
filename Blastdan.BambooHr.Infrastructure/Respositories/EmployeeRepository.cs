@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http.Json;
-using Blastdan.BambooHr.Infrastructure.Dal;
+using Blastdan.BambooHr.Infrastructure.Dto;
 using Blastdan.Goals.Domain.Repositories;
 using Blastdan.Goals.Domain.Models;
 using Blastdan.BambooHr.Infrastructure.Extensions;
@@ -29,7 +29,7 @@ namespace Blastdan.BambooHr.Infrastructure.Respositories
         {
             var response = await this.httpClient.GetAsync("employees/0/?fields=firstName%2ClastName");
             response.EnsureSuccessStatusCode();
-            var dal = await response.Content.ReadFromJsonAsync<EmployeeDal>() ?? new EmployeeDal();
+            var dal = await response.Content.ReadFromJsonAsync<EmployeeDto>() ?? new EmployeeDto();
             return dal.ToEmployee();
         }
     }

@@ -8,7 +8,7 @@ namespace Blastdan.BambooHr.Infrastructure.Respositories
 {
     public interface IFileCacheRepository
     {
-        Task<GoalsCache> Read();
-        Task Write(GoalsCache contents);
+        GoalsCache Read();
+        void Write(GoalsCache contents);
     }
 }

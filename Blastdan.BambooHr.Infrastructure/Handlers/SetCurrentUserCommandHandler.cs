@@ -10,18 +10,28 @@ using MediatR;
 
 namespace Blastdan.BambooHr.Infrastructure.Handlers
 {
-    public class SetCurrentUserCommandHandler : IRequestHandler<SetCurrentUserCommand>
+    public class SetCurrentUserCommandHandler : IRequestHandler<SetCurrentUserCommand, long>
     {
         private readonly IFileCacheRepository fileCacheRepository;
+        private readonly IEmployeeRepository employeeRepository;
 
-        public SetCurrentUserCommandHandler(IFileCacheRepository fileCacheRepository)
+        public SetCurrentUserCommandHandler(IFileCacheRepository fileCacheRepository, IEmployeeRepository employeeRepository)
         {
             this.fileCacheRepository = fileCacheRepository;
+            this.employeeRepository = employeeRepository;
         }
 
-        public async Task Handle(SetCurrentUserCommand request, CancellationToken cancellationToken)
+        public async Task<long> Handle(SetCurrentUserCommand request, CancellationToken cancellationToken)
         {
-            return;
+            var user = fileCacheRepository.Read();
+            if (user.CurrentUserEmployeeId == 0)
+            {
+                var employee = await employeeRepository.GetApiKeyUser();
+                fileCacheRepository.Write(new GoalsCache(employee));
+                user.CurrentUserEmployeeId = employee.EmployeeId;
+            }
+
+            return user.CurrentUserEmployeeId;
         }
     }
 }
