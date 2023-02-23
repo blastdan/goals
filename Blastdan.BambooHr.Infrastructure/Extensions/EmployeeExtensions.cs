@@ -7,7 +7,7 @@ using Blastdan.Goals.Domain.Models;
 
 namespace Blastdan.BambooHr.Infrastructure.Extensions
 {
-    public static class EmployeeExtensions
+    public static class EmployeeDtoExtensions
     {
         public static Employee ToEmployee(this EmployeeDto dal)
         {

@@ -1,16 +1,14 @@
 using System;
 using System.Net.Http.Json;
 using Blastdan.BambooHr.Infrastructure.Dto;
+using Blastdan.BambooHr.Infrastructure.Extensions;
 using Blastdan.Goals.Domain.Commands;
+using Blastdan.Goals.Domain.Models;
+using Blastdan.Goals.Domain.Repositories;
 using MediatR;
 
 namespace Blastdan.BambooHr.Infrastructure.Respositories
 {
-    public interface IGoalRepository
-    {
-        Task GetAllAggregateGoalInfo(long employeeId = 0);
-    }
-
     public class GoalRepository : IGoalRepository
     {
         private readonly IHttpClientFactory httpFactory;
@@ -23,7 +21,7 @@ namespace Blastdan.BambooHr.Infrastructure.Respositories
             this.httpClient = httpFactory.CreateClient(BambooHrConfiguration.Section);
         }
 
-        public async Task GetAllAggregateGoalInfo(long employeeId = 0)
+        public async Task<IEnumerable<Goal>> GetAllAggregateGoalInfo(long employeeId = 0)
         {
             if (employeeId == 0)
             {
@@ -36,6 +34,7 @@ namespace Blastdan.BambooHr.Infrastructure.Respositories
             var response = await this.httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
             var dal = await response.Content.ReadFromJsonAsync<AllAggregateGoalInfoDto>() ?? new AllAggregateGoalInfoDto();
+            return dal.ToGoalList();
         }
     }
 }

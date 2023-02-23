@@ -11,11 +11,11 @@ namespace Blastdan.BambooHr.Infrastructure.Dto
     {
         public AllAggregateGoalInfoDto()
         {
-            this.Filters = new List<Filter>();
+            this.Filters = new List<FilterDto>();
             SelectedFilter = string.Empty;
-            this.Goals = new List<Goal>();
-            this.Persons = new List<Person>();
-            this.Comments = new List<Comment>();
+            this.Goals = new List<GoalDto>();
+            this.Persons = new List<PersonDto>();
+            this.Comments = new List<CommentDto>();
         }
 
         [JsonPropertyName("canAlign")]
@@ -25,24 +25,24 @@ namespace Blastdan.BambooHr.Infrastructure.Dto
         public bool CanCreateGoals { get; set; }
 
         [JsonPropertyName("filters")]
-        public List<Filter> Filters { get; set; }
+        public List<FilterDto> Filters { get; set; }
 
         [JsonPropertyName("selectedFilter")]
         public string SelectedFilter { get; set; }
 
         [JsonPropertyName("goals")]
-        public List<Goal> Goals { get; set; }
+        public List<GoalDto> Goals { get; set; }
 
         [JsonPropertyName("persons")]
-        public List<Person> Persons { get; set; }
+        public List<PersonDto> Persons { get; set; }
 
         [JsonPropertyName("comments")]
-        public List<Comment> Comments { get; set; }
+        public List<CommentDto> Comments { get; set; }
     }
 
-    public partial class Comment
+    public partial class CommentDto
     {
-        public Comment()
+        public CommentDto()
         {
         }
 
@@ -53,9 +53,9 @@ namespace Blastdan.BambooHr.Infrastructure.Dto
         public long CommentCount { get; set; }
     }
 
-    public partial class Filter
+    public partial class FilterDto
     {
-        public Filter()
+        public FilterDto()
         {
             this.Id = string.Empty;
             this.Name = string.Empty;
@@ -71,9 +71,9 @@ namespace Blastdan.BambooHr.Infrastructure.Dto
         public long Count { get; set; }
     }
 
-    public partial class Goal
+    public partial class GoalDto
     {
-        public Goal()
+        public GoalDto()
         {
             Title = string.Empty;
             Description = string.Empty;
@@ -103,16 +103,16 @@ namespace Blastdan.BambooHr.Infrastructure.Dto
         public DateTimeOffset DueDate { get; set; }
 
         [JsonPropertyName("completionDate")]
-        public DateTimeOffset CompletionDate { get; set; }
+        public DateTimeOffset? CompletionDate { get; set; }
 
         [JsonPropertyName("status")]
         public string Status { get; set; }
     }
 
-    public partial class Person
+    public partial class PersonDto
     {
 
-        public Person()
+        public PersonDto()
         {
             DisplayFirstName = "Unset";
             LastName = "Unset";
@@ -123,7 +123,7 @@ namespace Blastdan.BambooHr.Infrastructure.Dto
         public long EmployeeId { get; set; }
 
         [JsonPropertyName("userId")]
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
 
         [JsonPropertyName("displayFirstName")]
         public string DisplayFirstName { get; set; }
