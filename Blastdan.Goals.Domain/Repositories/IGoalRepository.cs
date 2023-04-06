@@ -9,5 +9,7 @@ namespace Blastdan.Goals.Domain.Repositories
     public interface IGoalRepository
     {
         Task<IEnumerable<Goal>> GetAllAggregateGoalInfo(long employeeId = 0);
+        Task<GoalSummaries> GetGoalSummaries(long employeeId = 0);
+        Task<Goal> Create(Goal goal);
     }
 }

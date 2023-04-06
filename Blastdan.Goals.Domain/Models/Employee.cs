@@ -12,6 +12,7 @@ namespace Blastdan.Goals.Domain.Models
             this.EmployeeId = 0;
             this.FirstName = "Not Defined";
             this.LastName = "Not Defined";
+            this.Image = null;
         }
 
         public Employee(long employeeId, string firstName, string lastName)
@@ -19,11 +20,18 @@ namespace Blastdan.Goals.Domain.Models
             this.EmployeeId = employeeId;
             this.FirstName = firstName;
             this.LastName = lastName;
-
+            this.Image = null;
         }
+
+        public Employee(long employeeId, string firstName, string lastName, byte[] image) : this(employeeId, firstName, lastName)
+        {
+            this.Image = image;
+        }
+
         public long EmployeeId { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
+        public byte[]? Image { get; set; }
 
         public override bool Equals(object? obj) => obj is Employee employee && this.EmployeeId == employee.EmployeeId;
         public override int GetHashCode() => HashCode.Combine(this.EmployeeId);

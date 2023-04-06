@@ -1,4 +1,3 @@
-using System;
 using System.Net.Http.Json;
 using Blastdan.BambooHr.Infrastructure.Dto;
 using Blastdan.BambooHr.Infrastructure.Extensions;
@@ -21,7 +20,49 @@ namespace Blastdan.BambooHr.Infrastructure.Respositories
             this.httpClient = httpFactory.CreateClient(BambooHrConfiguration.Section);
         }
 
+        public async Task<Goal> Create(Goal goal)
+        {
+            var currentUser = await GetAndSetCurrentUser();
+            var url = $"performance/employees/{currentUser}/goals";
+            var request = new CreateGoalRequestDto(goal);
+            var response = await httpClient.PostAsJsonAsync(url, request);
+
+            response.EnsureSuccessStatusCode();
+
+            var responseDto = await response.Content.ReadFromJsonAsync<CreateGoalResponseDto>() ?? new CreateGoalResponseDto();
+            return responseDto.ToGoal();
+        }
+
+        public async Task<GoalSummaries> GetGoalSummaries(long employeeId = 0)
+        {
+            var dto = await GetAllAggregateGoalInfoRemote(employeeId);
+            var employeesTasks = dto.Persons.Select(GetEmployeesFromPersonDto).ToArray();
+            Task.WaitAll(employeesTasks);
+            var employees = employeesTasks.Select(t => t.Result);
+            var goals = dto.Goals.Select(g => g.ToGoal());
+
+            return new GoalSummaries(goals, employees);
+        }
+
         public async Task<IEnumerable<Goal>> GetAllAggregateGoalInfo(long employeeId = 0)
+        {
+            var dto = await GetAllAggregateGoalInfoRemote(employeeId);
+            return dto.ToGoalList();
+        }
+
+        private async Task<AllAggregateGoalInfoDto> GetAllAggregateGoalInfoRemote(long employeeId)
+        {
+            employeeId = await GetAndSetCurrentUser(employeeId);
+
+            var url = $"performance/employees/{employeeId}/goals/aggregate";
+
+            var response = await this.httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            var dto = await response.Content.ReadFromJsonAsync<AllAggregateGoalInfoDto>() ?? new AllAggregateGoalInfoDto();
+            return dto;
+        }
+
+        private async Task<long> GetAndSetCurrentUser(long employeeId = 0)
         {
             if (employeeId == 0)
             {
@@ -29,12 +70,16 @@ namespace Blastdan.BambooHr.Infrastructure.Respositories
                 employeeId = await mediator.Send(command);
             }
 
-            var url = $"performance/employees/{employeeId}/goals/aggregate";
+            return employeeId;
+        }
 
-            var response = await this.httpClient.GetAsync(url);
+        private async Task<Employee> GetEmployeesFromPersonDto(PersonDto person)
+        {
+            var response = await this.httpClient.GetAsync(person.PhotoUrl);
             response.EnsureSuccessStatusCode();
-            var dal = await response.Content.ReadFromJsonAsync<AllAggregateGoalInfoDto>() ?? new AllAggregateGoalInfoDto();
-            return dal.ToGoalList();
+            var image = await response.Content.ReadAsByteArrayAsync();
+
+            return new Employee(person.EmployeeId, person.DisplayFirstName, person.LastName, image);
         }
     }
 }

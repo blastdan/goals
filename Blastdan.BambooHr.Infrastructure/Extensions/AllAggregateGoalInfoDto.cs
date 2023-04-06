@@ -14,7 +14,7 @@ namespace Blastdan.BambooHr.Infrastructure.Extensions
             return dto.Goals.Select(ToGoal);
         }
 
-        public static Goal ToGoal(GoalDto dto)
+        public static Goal ToGoal(this GoalDto dto)
         {
             var percentageComplete = dto.PercentComplete / 100d;
             return new Goal(dto.Id, dto.Title, dto.Description, dto.DueDate, percentageComplete);

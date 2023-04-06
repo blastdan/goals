@@ -23,7 +23,7 @@ namespace Blastdan.Goals.Cli.Commands.Goals
 
         public override async Task<int> ExecuteAsync(CommandContext context)
         {
-            var goals = await goalRepository.GetAllAggregateGoalInfo();
+            var goals = await goalRepository.GetGoalSummaries();
             var view = GoalListView.Generate(goals);
             console.Write(view);
             return (int)GoalsExitCode.SUCCESS;

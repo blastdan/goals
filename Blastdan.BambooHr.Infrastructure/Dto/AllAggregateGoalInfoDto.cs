@@ -71,6 +71,7 @@ namespace Blastdan.BambooHr.Infrastructure.Dto
         public long Count { get; set; }
     }
 
+
     public partial class GoalDto
     {
         public GoalDto()
@@ -79,6 +80,7 @@ namespace Blastdan.BambooHr.Infrastructure.Dto
             Description = string.Empty;
             SharedWithEmployeeIds = new List<long>();
             Status = string.Empty;
+            Milestones = new List<MilestoneDto>();
         }
 
         [JsonPropertyName("id")]
@@ -107,6 +109,11 @@ namespace Blastdan.BambooHr.Infrastructure.Dto
 
         [JsonPropertyName("status")]
         public string Status { get; set; }
+        [JsonPropertyName("milestones")]
+        public List<MilestoneDto> Milestones { get; set; }
+
+        [JsonPropertyName("actions")]
+        public Actions Actions { get; set; }
     }
 
     public partial class PersonDto
@@ -133,5 +140,49 @@ namespace Blastdan.BambooHr.Infrastructure.Dto
 
         [JsonPropertyName("photoUrl")]
         public Uri PhotoUrl { get; set; }
+    }
+
+    public partial class Actions
+    {
+        [JsonPropertyName("canEditGoalProgressBar")]
+        public bool CanEditGoalProgressBar { get; set; }
+
+        [JsonPropertyName("canEditGoalMilestoneProgressBar")]
+        public bool CanEditGoalMilestoneProgressBar { get; set; }
+    }
+
+    public partial class MilestoneDto
+    {
+        public MilestoneDto()
+        {
+            Title = string.Empty;
+        }
+
+        [JsonPropertyName("id")]
+        public long Id { get; set; }
+
+        [JsonPropertyName("employeeGoalId")]
+        public long EmployeeGoalId { get; set; }
+
+        [JsonPropertyName("title")]
+        public string Title { get; set; }
+
+        [JsonPropertyName("currentValue")]
+        public long CurrentValue { get; set; }
+
+        [JsonPropertyName("startValue")]
+        public long StartValue { get; set; }
+
+        [JsonPropertyName("endValue")]
+        public long EndValue { get; set; }
+
+        [JsonPropertyName("completedDateTime")]
+        public DateTimeOffset CompletedDateTime { get; set; }
+
+        [JsonPropertyName("lastUpdateDateTime")]
+        public DateTimeOffset LastUpdateDateTime { get; set; }
+
+        [JsonPropertyName("lastUpdateUserId")]
+        public long LastUpdateUserId { get; set; }
     }
 }

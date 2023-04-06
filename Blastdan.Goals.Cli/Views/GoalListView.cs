@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+using System.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +12,45 @@ namespace Blastdan.Goals.Cli.Views
 {
     public static class GoalListView
     {
-        public static IRenderable Generate(IEnumerable<Goal> model)
+        public static IRenderable Generate(GoalSummaries model)
         {
-            var goals = new Rows(model.Select(m => Generate(m)));
+            var renderables = new List<IRenderable>();
+
+            foreach (var goal in model.Goals)
+            {
+                renderables.Add(Generate(goal));
+                renderables.Add(new Rule());
+            }
+
+            renderables.Add(Generate(model.SharedWith));
+
+            var goals = new Rows(renderables);
 
             return goals;
+        }
+
+        public static IRenderable Generate(IEnumerable<Employee> employees)
+        {
+            var panelList = new List<Panel>();
+
+            foreach (var employee in employees)
+            {
+                var image = new CanvasImage(new ReadOnlySpan<byte>(employee.Image));
+                image.MaxWidth = 12;
+                var panel = new Panel(image);
+                panel.Header($"{employee.FirstName} {employee.LastName}");
+
+                panelList.Add(panel);
+            }
+            var columns = panelList.Select(p => new Layout(p.Header?.Text, p)).ToArray();
+            var root = new Layout();
+            root.SplitRows(
+                new Layout("Title", new Text("Goals are shared with")),
+                new Layout("Images")
+                    .SplitColumns(columns)
+            );
+
+            return root;
         }
 
         public static IRenderable Generate(Goal model)

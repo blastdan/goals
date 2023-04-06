@@ -11,7 +11,12 @@ namespace Blastdan.Goals.Cli.Bootstrap
         public static void Configure(IConfigurator config)
         {
             config.AddCommand<WhoAmI>("whoami");
-            config.AddCommand<goalCommand.Goals>("goals");
+
+            config.AddBranch("goals", goal =>
+            {
+                goal.AddCommand<goalCommand.Goals>("summary");
+                goal.AddCommand<goalCommand.GoalsCreate>("create");
+            });
         }
     }
 }
